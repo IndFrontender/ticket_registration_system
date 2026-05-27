@@ -43,9 +43,16 @@ const LoginPage: React.FC = () => {
       regForm.resetFields();
     } catch (e: any) {
       console.error('Registration error:', e.response?.data || e.message);
-      const msg = e.response?.data?.detail
-        || e.response?.data?.message
-        || (e.response ? `Ошибка сервера (${e.response.status})` : 'Сервер недоступен');
+      const detail = e.response?.data?.detail;
+      let msg: string;
+      if (Array.isArray(detail)) {
+        msg = detail.map((d: any) => d.msg || d.message).join('; ');
+      } else if (typeof detail === 'string') {
+        msg = detail;
+      } else {
+        msg = e.response?.data?.message
+          || (e.response ? `Ошибка сервера (${e.response.status})` : 'Сервер недоступен');
+      }
       message.error(msg);
     } finally {
       setRegLoading(false);

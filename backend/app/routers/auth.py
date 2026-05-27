@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
@@ -26,13 +27,13 @@ class CreateUserRequest(BaseModel):
     username: str
     password: str
     role: str = "master"
-    full_name: str = ""
+    full_name: Optional[str] = ""
 
 
 class RegisterRequest(BaseModel):
     username: str
     password: str
-    full_name: str = ""
+    full_name: Optional[str] = ""
     role: str = "master"
 
 
@@ -127,14 +128,18 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
 
 @router.post("/register", response_model=UserResponse)
 def register(req: RegisterRequest, db: Session = Depends(get_db)):
+    if not req.username or not req.username.strip():
+        raise HTTPException(400, "Имя пользователя не может быть пустым")
+    if not req.password:
+        raise HTTPException(400, "Пароль не может быть пустым")
     existing = db.query(UserModel).filter(UserModel.username == req.username).first()
     if existing:
         raise HTTPException(400, "Пользователь с таким именем уже существует")
     user = UserModel(
-        username=req.username,
+        username=req.username.strip(),
         password_hash=hash_password(req.password),
         role=req.role,
-        full_name=req.full_name or req.username,
+        full_name=(req.full_name or "").strip() or req.username.strip(),
         is_active=True,
     )
     db.add(user)
