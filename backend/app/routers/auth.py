@@ -29,6 +29,13 @@ class CreateUserRequest(BaseModel):
     full_name: str = ""
 
 
+class RegisterRequest(BaseModel):
+    username: str
+    password: str
+    full_name: str = ""
+    role: str = "master"
+
+
 class UserResponse(BaseModel):
     id: int
     username: str
@@ -116,6 +123,24 @@ def login(req: LoginRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=403, detail="Пользователь заблокирован")
     token = create_token(user.id, user.role)
     return TokenResponse(access_token=token, user=UserResponse.model_validate(user))
+
+
+@router.post("/register", response_model=UserResponse)
+def register(req: RegisterRequest, db: Session = Depends(get_db)):
+    existing = db.query(UserModel).filter(UserModel.username == req.username).first()
+    if existing:
+        raise HTTPException(400, "Пользователь с таким именем уже существует")
+    user = UserModel(
+        username=req.username,
+        password_hash=hash_password(req.password),
+        role=req.role,
+        full_name=req.full_name or req.username,
+        is_active=True,
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return UserResponse.model_validate(user)
 
 
 @router.get("/me", response_model=UserResponse)
