@@ -5,6 +5,9 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+// All helpers below use paths WITHOUT /api prefix (baseURL adds it).
+// E.g. api.post('/auth/login') sends POST /api/auth/login
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {

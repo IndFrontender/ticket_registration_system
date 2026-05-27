@@ -21,7 +21,7 @@ const AdminReportsPage: React.FC = () => {
       const params: any = {};
       if (dateFrom) params.date_from = dateFrom;
       if (dateTo) params.date_to = dateTo;
-      const res = await api.get('/api/admin/reports/services', { params });
+      const res = await api.get('/admin/reports/services', { params });
       setServices(res.data.items || []);
       setTotalAmount(res.data.total_amount || 0);
     } catch { message.error('Ошибка загрузки'); }
@@ -44,7 +44,7 @@ const AdminReportsPage: React.FC = () => {
         params.date_from = dates[0].format('YYYY-MM-DD');
         params.date_to = dates[1].format('YYYY-MM-DD');
       }
-      const res = await api.post('/api/admin/reports/services/export', null, {
+      const res = await api.post('/admin/reports/services/export', null, {
         params, responseType: 'blob',
       });
       const url = window.URL.createObjectURL(new Blob([res.data]));
@@ -64,7 +64,7 @@ const AdminReportsPage: React.FC = () => {
         params.date_from = dates[0].format('YYYY-MM-DD');
         params.date_to = dates[1].format('YYYY-MM-DD');
       }
-      const res = await api.post('/api/admin/reports/services/export', null, {
+      const res = await api.post('/admin/reports/services/export', null, {
         params, responseType: 'blob',
       });
       const url = window.URL.createObjectURL(new Blob([res.data]));

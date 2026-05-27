@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       checkInit();
       return;
     }
-    api.get('/api/auth/me')
+    api.get('/auth/me')
       .then(res => { setUser(res.data); setInitialized(true); })
       .catch(() => { localStorage.removeItem('token'); setInitialized(true); })
       .finally(() => setLoading(false));
@@ -45,14 +45,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const checkInit = async () => {
     try {
-      const res = await api.get('/api/auth/init');
+      const res = await api.get('/auth/init');
       setInitialized(res.data.initialized);
     } catch { setInitialized(true); }
     setLoading(false);
   };
 
   const login = useCallback(async (username: string, password: string) => {
-    const res = await api.post('/api/auth/login', { username, password });
+    const res = await api.post('/auth/login', { username, password });
     localStorage.setItem('token', res.data.access_token);
     setUser(res.data.user);
     setInitialized(true);

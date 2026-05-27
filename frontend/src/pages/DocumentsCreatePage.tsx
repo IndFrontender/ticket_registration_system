@@ -30,7 +30,7 @@ const DocumentsCreatePage: React.FC = () => {
 
   const fetchTickets = async () => {
     try {
-      const res = await api.get('/api/tickets', { params: { page_size: 100 } });
+      const res = await api.get('/tickets', { params: { page_size: 100 } });
       setTickets(res.data.items || res.data || []);
     } catch { message.error('Ошибка загрузки заявок'); }
   };
@@ -38,7 +38,7 @@ const DocumentsCreatePage: React.FC = () => {
   const fetchDocuments = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/api/documents', { params: { page_size: 50 } });
+      const res = await api.get('/documents', { params: { page_size: 50 } });
       setDocuments(res.data.items || []);
     } catch { message.error('Ошибка загрузки документов'); }
     finally { setLoading(false); }

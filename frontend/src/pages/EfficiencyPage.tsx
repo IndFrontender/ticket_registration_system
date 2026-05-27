@@ -15,7 +15,7 @@ const EfficiencyPage: React.FC = () => {
   const fetchEfficiency = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/api/efficiency/masters', { params: { period } });
+      const res = await api.get('/efficiency/masters', { params: { period } });
       setData(res.data);
     } catch { message.error('Ошибка загрузки'); }
     finally { setLoading(false); }
@@ -23,7 +23,7 @@ const EfficiencyPage: React.FC = () => {
 
   const exportData = async (format: string) => {
     try {
-      const res = await api.get('/api/efficiency/masters/export', {
+      const res = await api.get('/efficiency/masters/export', {
         params: { period, format },
         responseType: 'blob',
       });
@@ -39,7 +39,7 @@ const EfficiencyPage: React.FC = () => {
 
   const printData = async () => {
     try {
-      const res = await api.get('/api/efficiency/masters/export', {
+      const res = await api.get('/efficiency/masters/export', {
         params: { period, format: 'pdf' },
         responseType: 'blob',
       });

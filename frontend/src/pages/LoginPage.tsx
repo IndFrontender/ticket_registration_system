@@ -14,7 +14,7 @@ const LoginPage: React.FC = () => {
   const handleInit = async () => {
     setInitLoading(true);
     try {
-      const res = await api.post('/api/auth/init');
+      const res = await api.post('/auth/init');
       message.success(`Администратор создан: ${res.data.username} / ${res.data.password}`);
     } catch (e: any) {
       message.error(e.response?.data?.detail || 'Ошибка');
@@ -38,7 +38,7 @@ const LoginPage: React.FC = () => {
   const handleRegister = async (values: any) => {
     setRegLoading(true);
     try {
-      await api.post('/api/auth/register', values);
+      await api.post('/auth/register', values);
       message.success('Регистрация выполнена! Теперь можно войти.');
       regForm.resetFields();
     } catch (e: any) {

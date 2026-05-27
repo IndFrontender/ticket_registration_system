@@ -18,7 +18,7 @@ const UsersPage: React.FC = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/api/auth/users');
+      const res = await api.get('/auth/users');
       setUsers(res.data);
     } catch { message.error('Ошибка загрузки'); }
     finally { setLoading(false); }
@@ -42,7 +42,7 @@ const UsersPage: React.FC = () => {
         await api.put(`/api/auth/users/${editUser.id}`, values);
         message.success('Пользователь обновлён');
       } else {
-        await api.post('/api/auth/users', values);
+        await api.post('/auth/users', values);
         message.success('Пользователь создан');
       }
       setModalOpen(false);

@@ -26,8 +26,8 @@ const BackupPage: React.FC = () => {
     setLoading(true);
     try {
       const [bRes, mRes] = await Promise.all([
-        api.get('/api/system/backups'),
-        api.get('/api/system/backup/modules').catch(() => ({ data: { modules: [] } })),
+        api.get('/system/backups'),
+        api.get('/system/backup/modules').catch(() => ({ data: { modules: [] } })),
       ]);
       setBackups(bRes.data.backups);
       setModules(mRes.data.modules);
@@ -38,7 +38,7 @@ const BackupPage: React.FC = () => {
   const createFull = async () => {
     setBackupLoading(true);
     try {
-      await api.post('/api/system/backup/full');
+      await api.post('/system/backup/full');
       message.success('Полный бэкап создан');
       fetchData();
     } catch { message.error('Ошибка'); }
@@ -49,7 +49,7 @@ const BackupPage: React.FC = () => {
     if (!selectedModules.length) { message.warning('Выберите модули'); return; }
     setBackupLoading(true);
     try {
-      await api.post('/api/system/backup/incremental', { modules: selectedModules });
+      await api.post('/system/backup/incremental', { modules: selectedModules });
       message.success('Инкрементальный бэкап создан');
       setIncModal(false);
       fetchData();
