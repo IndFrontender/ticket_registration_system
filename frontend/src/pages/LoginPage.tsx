@@ -42,7 +42,11 @@ const LoginPage: React.FC = () => {
       message.success('Регистрация выполнена! Теперь можно войти.');
       regForm.resetFields();
     } catch (e: any) {
-      message.error(e.response?.data?.detail || 'Ошибка регистрации');
+      console.error('Registration error:', e.response?.data || e.message);
+      const msg = e.response?.data?.detail
+        || e.response?.data?.message
+        || (e.response ? `Ошибка сервера (${e.response.status})` : 'Сервер недоступен');
+      message.error(msg);
     } finally {
       setRegLoading(false);
     }
