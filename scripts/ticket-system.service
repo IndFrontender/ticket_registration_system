@@ -1,0 +1,35 @@
+[Unit]
+Description=Система учета регистрации заявок (Ticket System)
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=ticketadmin
+Group=ticketadmin
+WorkingDirectory=/opt/ticket-system
+
+Environment=DATABASE_URL=postgresql://ticketadmin:password@localhost:5432/ticket_system
+Environment=SECRET_KEY=change-me-in-production
+Environment=HOST=127.0.0.1
+Environment=PORT=8000
+Environment=PYTHONUNBUFFERED=1
+
+ExecStart=/opt/ticket-system/venv/bin/gunicorn web_run:app \
+    --worker-class uvicorn.workers.UvicornWorker \
+    --bind 127.0.0.1:8000 \
+    --workers 4 \
+    --max-requests 1000 \
+    --max-requests-jitter 100 \
+    --timeout 120 \
+    --log-level info \
+    --access-logfile /var/log/ticket-system/access.log \
+    --error-logfile /var/log/ticket-system/error.log
+
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/ticket-system/out.log
+StandardError=append:/var/log/ticket-system/err.log
+
+[Install]
+WantedBy=multi-user.target

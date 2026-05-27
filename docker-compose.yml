@@ -1,0 +1,101 @@
+version: '3.8'
+
+services:
+  # API Gateway
+  gateway:
+    build: ./backend/services/gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - EQUIPMENT_SERVICE=http://equipment:8001
+      - TASKS_SERVICE=http://tasks:8002
+      - CHECKLISTS_SERVICE=http://checklists:8003
+      - MAIN_SERVICE=http://main:8000
+    depends_on:
+      - main
+      - equipment
+      - tasks
+      - checklists
+    restart: unless-stopped
+
+  # Main Backend (SPA server + API)
+  main:
+    build: ./backend
+    ports:
+      - "8000"
+    volumes:
+      - ./backend:/app
+      - sqlite_data:/app
+    environment:
+      - DATABASE_URL=sqlite:///./ticket_system.db
+      - MONGODB_URL=mongodb://mongo:27017/ticket_system_nosql
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  # Microservice: Equipment (printers, KKT, SVN, maintenance, reminders)
+  equipment:
+    build: ./backend/services/equipment
+    ports:
+      - "8001"
+    volumes:
+      - ./backend:/app
+      - sqlite_data_equipment:/data
+    environment:
+      - DATABASE_URL=sqlite:////data/equipment.db
+    restart: unless-stopped
+
+  # Microservice: Tasks (personal task notebook)
+  tasks:
+    build: ./backend/services/tasks
+    ports:
+      - "8002"
+    volumes:
+      - ./backend:/app
+      - sqlite_data_tasks:/data
+    environment:
+      - DATABASE_URL=sqlite:////data/tasks.db
+    restart: unless-stopped
+
+  # Microservice: Checklists (inspections, warranty checks, reminders)
+  checklists:
+    build: ./backend/services/checklists
+    ports:
+      - "8003"
+    volumes:
+      - ./backend:/app
+      - sqlite_data_checklists:/data
+    environment:
+      - DATABASE_URL=sqlite:////data/checklists.db
+    restart: unless-stopped
+
+  # MongoDB (NoSQL)
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./database/nosql/setup.js:/docker-entrypoint-initdb.d/setup.js:ro
+    restart: unless-stopped
+
+  # Frontend (Nginx)
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - gateway
+    restart: unless-stopped
+
+volumes:
+  sqlite_data:
+  sqlite_data_equipment:
+  sqlite_data_tasks:
+  sqlite_data_checklists:
+  mongo_data:

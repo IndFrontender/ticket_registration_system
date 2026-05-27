@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "TicketMobile",
+    "slug": "ticket-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#1677ff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ticket.system"
+    },
+    "android": {
+      "package": "com.ticket.system",
+      "adaptiveIcon": {
+        "backgroundColor": "#1677ff"
+      }
+    }
+  }
+}
