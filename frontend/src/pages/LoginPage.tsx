@@ -61,70 +61,66 @@ const LoginPage: React.FC = () => {
           </Typography.Title>
         </div>
 
-        {!initialized ? (
-          <div style={{ textAlign: 'center' }}>
-            <Typography.Text>Первый запуск — создайте администратора</Typography.Text>
-            <Button
-              type="primary" size="large" block
-              loading={initLoading} onClick={handleInit}
-              style={{ marginTop: 16 }}
-            >
-              Создать администратора
-            </Button>
-          </div>
-        ) : (
-          <Tabs
-            centered
-            items={[
-              {
-                key: 'login',
-                label: 'Вход',
-                children: (
-                  <Form layout="vertical" onFinish={handleLogin}>
-                    <Form.Item name="username" rules={[{ required: true, message: 'Введите имя' }]}>
-                      <Input prefix={<UserOutlined />} placeholder="Имя пользователя" size="large" />
-                    </Form.Item>
-                    <Form.Item name="password" rules={[{ required: true, message: 'Введите пароль' }]}>
-                      <Input.Password prefix={<LockOutlined />} placeholder="Пароль" size="large" />
-                    </Form.Item>
-                    <Button type="primary" htmlType="submit" block size="large" loading={loading}>
-                      Войти
+        <Tabs
+          centered
+          items={[
+            {
+              key: 'login',
+              label: 'Вход',
+              children: (
+                <Form layout="vertical" onFinish={handleLogin}>
+                  <Form.Item name="username" rules={[{ required: true, message: 'Введите имя' }]}>
+                    <Input prefix={<UserOutlined />} placeholder="Имя пользователя" size="large" />
+                  </Form.Item>
+                  <Form.Item name="password" rules={[{ required: true, message: 'Введите пароль' }]}>
+                    <Input.Password prefix={<LockOutlined />} placeholder="Пароль" size="large" />
+                  </Form.Item>
+                  <Button type="primary" htmlType="submit" block size="large" loading={loading}>
+                    Войти
+                  </Button>
+                  {!initialized && (
+                    <Button
+                      type="link" block
+                      loading={initLoading} onClick={handleInit}
+                      style={{ marginTop: 8 }}
+                    >
+                      Первый запуск — создать администратора
                     </Button>
-                  </Form>
-                ),
-              },
-              {
-                key: 'register',
-                label: 'Регистрация',
-                children: (
-                  <Form layout="vertical" form={regForm} onFinish={handleRegister} initialValues={{ role: 'master' }}>
-                    <Form.Item name="username" rules={[{ required: true, message: 'Введите имя' }]}>
-                      <Input prefix={<UserOutlined />} placeholder="Имя пользователя" size="large" />
-                    </Form.Item>
-                    <Form.Item name="password" rules={[{ required: true, message: 'Введите пароль' }]}>
-                      <Input.Password prefix={<LockOutlined />} placeholder="Пароль" size="large" />
-                    </Form.Item>
-                    <Form.Item name="full_name">
-                      <Input prefix={<TeamOutlined />} placeholder="ФИО (необязательно)" size="large" />
-                    </Form.Item>
-                    <Form.Item name="role" label="Роль" rules={[{ required: true, message: 'Выберите роль' }]}>
-                      <Select
-                        options={[
-                          { value: 'master', label: 'Мастер' },
-                          { value: 'admin', label: 'Администратор' },
-                        ]}
-                        size="large"
-                      />
-                    </Form.Item>
-                    <Button type="primary" htmlType="submit" block size="large" loading={regLoading}>
-                      Зарегистрироваться
-                    </Button>
-                  </Form>
-                ),
-              },
-            ]}
-          />
-        )}
+                  )}
+                </Form>
+              ),
+            },
+            {
+              key: 'register',
+              label: 'Регистрация',
+              children: (
+                <Form layout="vertical" form={regForm} onFinish={handleRegister} initialValues={{ role: 'master' }}>
+                  <Form.Item name="username" rules={[{ required: true, message: 'Введите имя' }]}>
+                    <Input prefix={<UserOutlined />} placeholder="Имя пользователя" size="large" />
+                  </Form.Item>
+                  <Form.Item name="password" rules={[{ required: true, message: 'Введите пароль' }]}>
+                    <Input.Password prefix={<LockOutlined />} placeholder="Пароль" size="large" />
+                  </Form.Item>
+                  <Form.Item name="full_name">
+                    <Input prefix={<TeamOutlined />} placeholder="ФИО (необязательно)" size="large" />
+                  </Form.Item>
+                  <Form.Item name="role" label="Роль" rules={[{ required: true, message: 'Выберите роль' }]}>
+                    <Select
+                      options={[
+                        { value: 'master', label: 'Мастер' },
+                        { value: 'admin', label: 'Администратор' },
+                      ]}
+                      size="large"
+                    />
+                  </Form.Item>
+                  <Button type="primary" htmlType="submit" block size="large" loading={regLoading}>
+                    Зарегистрироваться
+                  </Button>
+                </Form>
+              ),
+            },
+          ]}
+        />
       </Card>
     </div>
   );
