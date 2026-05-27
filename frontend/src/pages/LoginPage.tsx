@@ -97,7 +97,7 @@ const LoginPage: React.FC = () => {
                 key: 'register',
                 label: 'Регистрация',
                 children: (
-                  <Form layout="vertical" form={regForm} onFinish={handleRegister}>
+                  <Form layout="vertical" form={regForm} onFinish={handleRegister} initialValues={{ role: 'master' }}>
                     <Form.Item name="username" rules={[{ required: true, message: 'Введите имя' }]}>
                       <Input prefix={<UserOutlined />} placeholder="Имя пользователя" size="large" />
                     </Form.Item>
@@ -107,7 +107,7 @@ const LoginPage: React.FC = () => {
                     <Form.Item name="full_name">
                       <Input prefix={<TeamOutlined />} placeholder="ФИО (необязательно)" size="large" />
                     </Form.Item>
-                    <Form.Item name="role" label="Роль" initialValue="master">
+                    <Form.Item name="role" label="Роль" rules={[{ required: true, message: 'Выберите роль' }]}>
                       <Select
                         options={[
                           { value: 'master', label: 'Мастер' },
